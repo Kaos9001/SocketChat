@@ -14,7 +14,7 @@ class Client:
 	def connect(self, host, port):
 		self.socket.connect((host,port))
 		self.name =  input("Select a nickname: ")
-		name = bytes("/!nick " + self.name, "utf-8")
+		name = bytes("NICK " + socket.gethostbyname(socket.gethostname()) + " " + self.name, "utf-8")
 		self.socket.send(name)
 		self.user_input = [None, False]
 		t = threading.Thread(target=self.get_input)
@@ -26,13 +26,12 @@ class Client:
 				if sock == self.socket:
 					try:
 						data = self.socket.recv(self.buffer_size)
-						print(data)
 						if not data:
 							sock.close()
 							input("Disconnected. Press enter to quit.")
 							sys.exit()
 						else:
-							print(str(data[2:len(str(data))-2]))
+							print(data.decode("utf-8"))
 					except Exception as e:
 						print(e)
 						sock.close()
